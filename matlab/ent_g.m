@@ -3,9 +3,10 @@ function H = ent_g(x, biascorrect)
 %   H = ent_g(x) returns the entropy of a (possibly 
 %   multidimensional) Gaussian variable x with bias correction.
 %   Rows of x correspond to samples, columns to dimensions/variables. 
-%   (Trials first axis)
-%   biascorrect - true / false option (default true) which specifies
-%   whether bias correction should be applied to the entropy.
+%   (Samples first axis)
+%
+%   biascorrect : true / false option (default true) which specifies
+%   whether bias correction should be applied to the estimated entropy.
 
 if isvector(x)
     x = x(:);
