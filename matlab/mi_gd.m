@@ -5,7 +5,7 @@ function I = mi_gd(x, y, Ym, biascorrect, demeaned)
 %   Gaussian variable x and the discrete variable y.
 %   Rows of x correspond to samples, columns to dimensions/variables. 
 %   (Samples first axis)
-%   y should contain integer values in the closed range [0 Ym-1].
+%   y should contain integer values in the range [0 Ym-1] (inclusive).
 %
 %   biascorrect : true / false option (default true) which species whether
 %   bias correction should be applied to the esimtated MI.
