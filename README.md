@@ -22,7 +22,7 @@ Discrete inputs are passed as two arguments, the vector of values over samples y
 
 Care should be taken with continuous variables that contain many repeated values. The copula transform which depends on a rank ordering will not be well defined in such cases. Possible approaches include repeated calculations while jittering the data with low amplitude noise to avoid the numerically equivalent values, or using binning and discrete methods. 
 
-For functions with a `biascorrect` option, this is a true or false switch which indicates whether analytic bias correction for the entropy of Gaussian variables is applied. The bias correction increases computation time and is not needed when combined with permutation testing.
+For functions with a `biascorrect` option, this is an optional true or false switch (default true) which indicates whether analytic bias correction for the entropy of Gaussian variables is applied. The bias correction increases computation time and is not needed when combined with permutation testing.
 
 #### GCMI functions
 
@@ -53,7 +53,7 @@ These functions implement the different steps for the GCMI calculation. They are
 
 ##### Information theoretic quantities for Gaussian variables
 
-These functions calculate information theoretic quantities (mi: mutual information, cmi: conditional mutual information) for Gaussian variables. Together with copula normalization above they implement the GCMI estimator: `gcmi(x,y) = mi_gg(copnorm(x),copnorm(y)`.
+These functions calculate information theoretic quantities (mi: mutual information, cmi: conditional mutual information) for Gaussian variables. Together with copula normalization above they implement the GCMI estimator: `gcmi(x,y) = mi_gg(copnorm(x),copnorm(y))`.
 
 *  `I = mi_gg(x,y,biascorrect)` 
 

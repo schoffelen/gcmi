@@ -28,7 +28,7 @@ C = (x'*x) / (Ntrl - 1);
 chC = chol(C);
 
 % entropy in nats
-HX = sum(log(diag(gx.chC))) + 0.5*Nvarx*(log(2*pi)+1);
+HX = sum(log(diag(chC))) + 0.5*Nvarx*(log(2*pi)+1);
 
 ln2 = log(2);
 if biascorrect

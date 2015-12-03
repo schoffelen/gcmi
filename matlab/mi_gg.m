@@ -5,9 +5,9 @@ function I = mi_gg(x, y, biascorrect, demeaned)
 %   If x and/or y are multivariate rows must correspond to samples, columns
 %   to dimensions/variables. (Samples first axis) 
 %
-%   biascorrect : true / false option (default true) which species whether
+%   biascorrect : true / false option (default true) which specifies whether
 %   bias correction should be applied to the esimtated MI.
-%   demeaned : false / true option (default false) which species whether the
+%   demeaned : false / true option (default false) which specifies whether the
 %   input data already has zero mean (true if it has been copula-normalized)
 
 % ensure samples first axis for vectors

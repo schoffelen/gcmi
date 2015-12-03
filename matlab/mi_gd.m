@@ -7,9 +7,9 @@ function I = mi_gd(x, y, Ym, biascorrect, demeaned)
 %   (Samples first axis)
 %   y should contain integer values in the range [0 Ym-1] (inclusive).
 %
-%   biascorrect : true / false option (default true) which species whether
+%   biascorrect : true / false option (default true) which specifies whether
 %   bias correction should be applied to the esimtated MI.
-%   demeaned : false / true option (default false) which species whether the
+%   demeaned : false / true option (default false) which specifies whether the
 %   input data already has zero mean (true if it has been copula-normalized)
 
 % ensure samples first axis for vectors
