@@ -36,6 +36,9 @@ For functions with a `biascorrect` option, this is an optional true or false swi
 
     Calculate GCMI between a (possibly multidimensional) continuous variables x and a discrete y (with values between 0 and Ym-1 inclusive).
 
+*  `I = gccmi_ccc(x,y,z)` 
+
+    Calculate GCMI between two (possibly multidimensional) continuous variables x and y conditioned on a third, z. x / y / z can have any marginal distribution but should not contain repeated values.
 
 #### Low level functions
 
@@ -62,6 +65,10 @@ These functions calculate information theoretic quantities (mi: mutual informati
 *  `I = mi_gd(x,y,Ym,biascorrect)` 
 
     Calculate MI between a (possibly multidimensional) Gaussian variable x and a discrete y (with values between 0 and Ym-1 inclusive). 
+
+*  `I = cmi_ggg(x,y,biascorrect)` 
+
+    Calculate CMI between two (possibly multidimensional) Gaussian variables x and y conditioned on a third, z. 
 
 ##### Miscellaneous functions
 
