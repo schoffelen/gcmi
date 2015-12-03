@@ -16,7 +16,14 @@ Add the contents of the `matlab` directory to your Matlab path.
 
 This is an overview of the functions available. Fuller descriptions of function arguments are provided in the in-line documentaion (Python docstrings, Matlab help strings).
 
-The function names follow a format where the first part of the name is the quantity which the function calculates (eg mi, cmi, gcmi) followed by an underscore, followed by the types of variables that function acts on, in order corresponding to the arguments - g: Gaussian, d: Discrete, c: Continuous (any distribution). Where inputs can be multivariate, samples / trials should be the first axis of array.
+The function names follow a format where the first part of the name is the quantity which the function calculates (eg mi, cmi, gcmi) followed by an underscore, followed by the types of variables that function acts on, in order corresponding to the arguments - g: Gaussian, d: Discrete, c: Continuous (any distribution). 
+
+Please note a crucial difference in the interface between the Python and Matlab versions for multidimensional variables. In keeping with the convention of each platform in Matlab samples should be the first axis of the array (data stored in Fortran order); in Python samples should be the last axis of the array (data stored in C order by default).
+
+| Platform | Multivariate data layout    |
+| :------: | :----------------------:    |
+| Matlab   | samples FIRST axis (rows)   |
+| Python   | samples LAST axis (columns) |
 
 Discrete inputs are passed as two arguments, the vector of values over samples y, and an integer parameter Ym specifying the size of the discrete space. In Python discrete variables should be stored in an integer data type array; in Matlab a double is used but should contain only integer values. y takes values between `0` and `Ym-1` inclusive. Empty classes are not supported.
 
@@ -42,7 +49,7 @@ For functions with a `biascorrect` option, this is an optional true or false swi
 
 *  `I = gccmi_ccd(x,y,z,Zm)` 
 
-  Calculate GCMI between two (possibly multidimensional) continuous variables x and y conditioned on a third discrete variable, z (with values between 0 and Zm-1 inclusive). x and y can have any marginal distribution but should not contain repeated values.
+    Calculate GCMI between two (possibly multidimensional) continuous variables x and y conditioned on a third discrete variable, z (with values between 0 and Zm-1 inclusive). x and y can have any marginal distribution but should not contain repeated values.
 
 #### Low level functions
 
