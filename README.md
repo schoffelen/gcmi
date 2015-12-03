@@ -40,6 +40,10 @@ For functions with a `biascorrect` option, this is an optional true or false swi
 
     Calculate GCMI between two (possibly multidimensional) continuous variables x and y conditioned on a third, z. x / y / z can have any marginal distribution but should not contain repeated values.
 
+*  `I = gccmi_ccd(x,y,z,Zm)` 
+
+  Calculate GCMI between two (possibly multidimensional) continuous variables x and y conditioned on a third discrete variable, z (with values between 0 and Zm-1 inclusive). x and y can have any marginal distribution but should not contain repeated values.
+
 #### Low level functions
 
 These functions implement the different steps for the GCMI calculation. They are provided separately for computational efficiency (e.g. copula transform only needs to be performed once prior to permutation testing).

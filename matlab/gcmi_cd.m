@@ -33,7 +33,7 @@ for xi=1:Nvar
 end
 
 % check values of discrete variable
-if min(Ym)~=0 || max(Ym)~=(Ym-1) || any(round(y)~=y)
+if min(y)~=0 || max(y)~=(Ym-1) || any(round(y)~=y)
     error('Values of discrete variable y are not correct')
 end
 

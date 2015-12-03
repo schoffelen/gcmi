@@ -22,7 +22,7 @@ Nvary = size(y,2);
 Nvarz = size(z,2);
 
 if (size(y,1) ~= Ntrl) || (size(z,1) ~= Ntrl)
-    error('cmi_ggg: number of trials do not match')
+    error('gccmi_ggg: number of trials do not match')
 end
 
 % check for repeated values
