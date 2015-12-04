@@ -1,6 +1,8 @@
 function I = cmi_ggg(x, y, z, biascorrect, demeaned)
-% CMI_GG Mutual information (MI) between two Gaussian variables in bits
-%   I = cmi_gg(x,y,z) returns the CMI between two (possibly multidimensional)
+% CMI_GGG Conditional Mutual information (CMI) between two Gaussian variables
+%        conditioned on a third
+%
+%   I = cmi_ggg(x,y,z) returns the CMI between two (possibly multidimensional)
 %   Gassian variables, x and y, conditioned on a third, z, with bias correction.
 %   If x / y / z are multivariate rows must correspond to samples, columns
 %   to dimensions/variables. (Samples first axis) 

@@ -1,12 +1,14 @@
 function [CMI I] = gcmi_ccd(x, y, z, Zm)
 % GCCMI_CCD Gaussian-Copula CMI between 2 continuous variables conditioned on 
 %           a discrete variable.
-%   I = gccmi_ccd(x,y,z, Zm) returns the CMI between two (possibly 
+%   [CMI I] = gccmi_ccd(x,y,z,Zm) returns the CMI between two (possibly
 %   multidimensional) continuous variables, x and y, conditioned on a third 
 %   discrete variable, z, estimated via Gaussian copulae.
 %   If x and/or y are multivariate rows must correspond to samples, columns
 %   to dimensions/variables. (Samples first axis) 
 %   z should contain integer values in the range [0 Zm-1] (inclusive).
+%   In addition to the CMI, the variable I is returned which is the pooled MI
+%   calculated with the copula transform performed within each class
 
 % ensure samples first axis for vectors
 if isvector(x)
@@ -57,11 +59,11 @@ cy = cell(Zm,1);
 for zi=1:Zm
     idx = z==(zi-1);
     Pz(zi) = sum(idx);
-    thsx = x(idx,:);
-    thsy = y(idx,:);
+    thsx = copnorm(x(idx,:));
+    thsy = copnorm(y(idx,:));
     cx{zi} = thsx;
     cy{zi} = thsy;
-    I = mi_gg(copnorm(thsx),copnorm(thsy),true,true);
+    I = mi_gg(thsx,thsy,true,true);
     Icond(zi) = I;
 end
 Pz = Pz ./ Ntrl;
