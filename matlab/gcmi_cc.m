@@ -13,6 +13,9 @@ end
 if isvector(y)
     y = y(:);
 end
+if ndims(x)~=2 || ndims(y)~=2
+    error('gcmi_cc: input arrays should be 2d')
+end
 Ntrl = size(x,1);
 Nvarx = size(x,2);
 Nvary = size(y,2);

@@ -15,6 +15,9 @@ end
 if isvector(y)
     y = y(:);
 end
+if ndims(x)~=2 || ndims(y)~=2
+    error('gccmi_cc: input arrays should be 2d')
+end
 if isvector(z)
     z = z(:);
 else

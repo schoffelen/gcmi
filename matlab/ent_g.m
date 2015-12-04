@@ -11,8 +11,10 @@ function H = ent_g(x, biascorrect)
 if isvector(x)
     x = x(:);
 end
-Ntrl = size(x,1);
-Nvarx = size(x,2);
+if ndims(x)~=2
+    error('ent_g: input arrays should be 2d')
+end
+[Ntrl, Nvarx] = size(x);
 
 if nargin < 2
     % default is to apply bias correction

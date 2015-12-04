@@ -1,4 +1,4 @@
-function I = cmi_gg(x, y, z, biascorrect, demeaned)
+function I = cmi_ggg(x, y, z, biascorrect, demeaned)
 % CMI_GG Mutual information (MI) between two Gaussian variables in bits
 %   I = cmi_gg(x,y,z) returns the CMI between two (possibly multidimensional)
 %   Gassian variables, x and y, conditioned on a third, z, with bias correction.
@@ -19,6 +19,9 @@ if isvector(y)
 end
 if isvector(z)
     z = z(:);
+end
+if ndims(x)~=2 || ndims(y)~=2 || ndims(z)~=2
+    error('cmi_ggg: input arrays should be 2d')
 end
 Ntrl = size(x,1);
 Nvarx = size(x,2);

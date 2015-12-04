@@ -16,6 +16,9 @@ function I = mi_gd(x, y, Ym, biascorrect, demeaned)
 if isvector(x)
     x = x(:);
 end
+if ndims(x)~=2
+    error('mi_gd: input arrays should be 2d')
+end
 if isvector(y)
     y = y(:);
 else

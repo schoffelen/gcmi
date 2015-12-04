@@ -11,6 +11,10 @@ function I = gcmi_cd(x, y, Ym)
 if isvector(x)
     x = x(:);
 end
+if ndims(x)~=2
+    error('gcmi_cd: input array should be 2d')
+end
+
 if isvector(y)
     y = y(:);
 else
