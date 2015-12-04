@@ -287,3 +287,189 @@ def gcmi_cd(x,y,Ym):
     return I
 
 
+def cmi_ggg(x, y, z, biascorrect=True, demeaned=False):
+    """Conditional Mutual information (CMI) between two Gaussian variables
+    conditioned on a third
+
+    I = cmi_ggg(x,y,z) returns the CMI between two (possibly multidimensional)
+    Gassian variables, x and y, conditioned on a third, z, with bias correction.
+    If x / y / z are multivariate columns must correspond to samples, rows
+    to dimensions/variables. (Samples last axis)
+
+    biascorrect : true / false option (default true) which specifies whether
+    bias correction should be applied to the esimtated MI.
+    demeaned : false / true option (default false) which specifies whether the
+    input data already has zero mean (true if it has been copula-normalized)
+
+    """
+
+    x = np.atleast_2d(x)
+    y = np.atleast_2d(y)
+    z = np.atleast_2d(z)
+    if x.ndim > 2 or y.ndim > 2 or z.ndim > 2:
+        raise ValueError, "x, y and z must be at most 2d"
+    Ntrl = x.shape[1]
+    Nvarx = x.shape[0]
+    Nvary = y.shape[0]
+    Nvarz = z.shape[0]
+    Nvaryz = Nvary + Nvarz
+    Nvarxy = Nvarx + Nvary
+    Nvarxz = Nvarx + Nvarz
+    Nvarxyz = Nvarx + Nvaryz
+
+    if y.shape[1] != Ntrl or z.shape[1] != Ntrl:
+        raise ValueError, "number of trials do not match"
+
+    # joint variable
+    xyz = np.vstack((x,y,z))
+    if not demeaned:
+        xyz = xyz - xyz.mean(axis=1)[:,np.newaxis]
+    Cxyz = np.dot(xyz,xyz.T) / float(Ntrl - 1)
+    # submatrices of joint covariance
+    Cz = Cxyz[Nvarxy:,Nvarxy:]
+    Cyz = Cxyz[Nvarx:,Nvarx:]
+    Cxz = np.zeros((Nvarxz,Nvarxz))
+    Cxz[:Nvarx,:Nvarx] = Cxyz[:Nvarx,:Nvarx]
+    Cxz[:Nvarx,Nvarx:] = Cxyz[:Nvarx,Nvarxy:]
+    Cxz[Nvarx:,:Nvarx] = Cxyz[Nvarxy:,:Nvarx]
+    Cxz[Nvarx:,Nvarx:] = Cxyz[Nvarxy:,Nvarxy:]
+
+    chCz = np.linalg.cholesky(Cz)
+    chCxz = np.linalg.cholesky(Cxz)
+    chCyz = np.linalg.cholesky(Cyz)
+    chCxyz = np.linalg.cholesky(Cxyz)
+
+    # entropies in nats
+    # normalizations cancel for cmi
+    HZ = np.sum(np.log(np.diagonal(chCz))) # + 0.5*Nvarz*(np.log(2*np.pi)+1.0)
+    HXZ = np.sum(np.log(np.diagonal(chCxz))) # + 0.5*Nvarxz*(np.log(2*np.pi)+1.0)
+    HYZ = np.sum(np.log(np.diagonal(chCyz))) # + 0.5*Nvaryz*(np.log(2*np.pi)+1.0)
+    HXYZ = np.sum(np.log(np.diagonal(chCxyz))) # + 0.5*Nvarxyz*(np.log(2*np.pi)+1.0)
+
+    ln2 = np.log(2)
+    if biascorrect:
+        psiterms = sp.special.psi((Ntrl - np.arange(1,Nvarxyz+1)).astype(np.float)/2.0) / 2.0
+        dterm = (ln2 - np.log(Ntrl-1.0)) / 2.0
+        HZ = HZ - Nvarz*dterm - psiterms[:Nvarz].sum()
+        HXZ = HXZ - Nvarxz*dterm - psiterms[:Nvarxz].sum()
+        HYZ = HYZ - Nvaryz*dterm - psiterms[:Nvaryz].sum()
+        HXYZ = HXYZ - Nvarxyz*dterm - psiterms[:Nvarxyz].sum()
+
+    # MI in bits
+    I = (HXZ + HYZ - HXYZ - HZ) / ln2
+    return I
+
+
+def gccmi_ccc(x,y,z):
+    """Gaussian-Copula CMI between three continuous variables.
+
+    I = gccmi_ccc(x,y,z) returns the CMI between two (possibly multidimensional)
+    continuous variables, x and y, conditioned on a third, z, estimated via a
+    Gaussian copula.
+    If x and/or y are multivariate columns must correspond to samples, rows
+    to dimensions/variables. (Samples first axis)
+
+    """
+
+    x = np.atleast_2d(x)
+    y = np.atleast_2d(y)
+    z = np.atleast_2d(z)
+    if x.ndim > 2 or y.ndim > 2 or z.ndim > 2:
+        raise ValueError, "x, y and z must be at most 2d"
+
+    Ntrl = x.shape[1]
+    Nvarx = x.shape[0]
+    Nvary = y.shape[0]
+    Nvarz = z.shape[0]
+
+    if y.shape[1] != Ntrl or z.shape[1] != Ntrl:
+        raise ValueError, "number of trials do not match"
+
+    # check for repeated values
+    for xi in range(Nvarx):
+        if (np.unique(x[xi,:]).size / float(Ntrl)) < 0.9:
+            warnings.warn("Input x has more than 10% repeated values")
+            break
+    for yi in range(Nvary):
+        if (np.unique(y[yi,:]).size / float(Ntrl)) < 0.9:
+            warnings.warn("Input y has more than 10% repeated values")
+            break
+    for zi in range(Nvarz):
+        if (np.unique(z[zi,:]).size / float(Ntrl)) < 0.9:
+            warnings.warn("Input y has more than 10% repeated values")
+            break
+
+    # copula normalization
+    cx = copnorm(x)
+    cy = copnorm(y)
+    cz = copnorm(z)
+    # parametric Gaussian CMI
+    I = cmi_ggg(cx,cy,cz,True,True)
+    return I
+
+
+def gccmi_ccd(x,y,z,Zm):
+    """Gaussian-Copula CMI between 2 continuous variables conditioned on a discrete variable.
+
+    I = gccmi_ccd(x,y,z,Zm) returns the CMI between two (possibly multidimensional)
+    continuous variables, x and y, conditioned on a third discrete variable z, estimated
+    via a Gaussian copula.
+    If x and/or y are multivariate columns must correspond to samples, rows
+    to dimensions/variables. (Samples first axis)
+    z should contain integer values in the range [0 Zm-1] (inclusive).
+
+    """
+
+    x = np.atleast_2d(x)
+    y = np.atleast_2d(y)
+    if x.ndim > 2 or y.ndim > 2:
+        raise ValueError, "x and y must be at most 2d"
+    if z.ndim > 1:
+        raise ValueError, "only univariate discrete variables supported"
+    if not np.issubdtype(z.dtype, np.integer):
+        raise ValueError, "z should be an integer array"
+    if not isinstance(Zm, int):
+        raise ValueError, "Zm should be an integer"
+
+    Ntrl = x.shape[1]
+    Nvarx = x.shape[0]
+    Nvary = y.shape[0]
+
+    if y.shape[1] != Ntrl or z.size != Ntrl:
+        raise ValueError, "number of trials do not match"
+
+    # check for repeated values
+    for xi in range(Nvarx):
+        if (np.unique(x[xi,:]).size / float(Ntrl)) < 0.9:
+            warnings.warn("Input x has more than 10% repeated values")
+            break
+    for yi in range(Nvary):
+        if (np.unique(y[yi,:]).size / float(Ntrl)) < 0.9:
+            warnings.warn("Input y has more than 10% repeated values")
+            break
+
+    # check values of discrete variable
+    if z.min()!=0 or z.max()!=(Zm-1):
+        raise ValueError, "values of discrete variable z are out of bounds"
+
+    # calculate gcmi for each z value
+    Icond = np.zeros(Zm)
+    Pz = np.zeros(Zm)
+    cx = []
+    cy = []
+    for zi in range(Zm):
+        idx = z==zi
+        thsx = copnorm(x[:,idx])
+        thsy = copnorm(y[:,idx])
+        Pz[zi] = x.shape[1]
+        cx.append(thsx)
+        cy.append(thsy)
+        Icond[zi] = mi_gg(thsx,thsy,True,True)
+
+    Pz = Pz / float(Ntrl)
+
+    # conditional mutual information
+    CMI = np.sum(Pz*Icond)
+    I = mi_gg(np.hstack(cx),np.hstack(cy),True,False)
+    return (CMI,I)
+
