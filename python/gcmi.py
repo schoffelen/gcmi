@@ -58,7 +58,7 @@ def ent_g(x, biascorrect=True):
 
     ln2 = np.log(2)
     if biascorrect:
-        psiterms = sp.special.psi((Ntrl - np.arange(1,Nvarx+1))/2.0) / 2.0
+        psiterms = sp.special.psi((Ntrl - np.arange(1,Nvarx+1).astype(np.float))/2.0) / 2.0
         dterm = (ln2 - np.log(Ntrl-1.0)) / 2.0
         HX = HX - Nvarx*dterm - psiterms.sum()
 
@@ -114,7 +114,7 @@ def mi_gg(x, y, biascorrect=True, demeaned=False):
 
     ln2 = np.log(2)
     if biascorrect:
-        psiterms = sp.special.psi((Ntrl - np.arange(1,Nvarxy+1))/2.0) / 2.0
+        psiterms = sp.special.psi((Ntrl - np.arange(1,Nvarxy+1)).astype(np.float)/2.0) / 2.0
         dterm = (ln2 - np.log(Ntrl-1.0)) / 2.0
         HX = HX - Nvarx*dterm - psiterms[:Nvarx].sum()
         HY = HY - Nvary*dterm - psiterms[:Nvary].sum()
@@ -162,6 +162,128 @@ def gcmi_cc(x,y):
     cy = copnorm(y)
     # parametric Gaussian MI
     I = mi_gg(cx,cy,True,True)
+    return I
+
+
+def mi_gd(x, y, Ym, biascorrect=True, demeaned=False):
+    """Mutual information (MI) between a Gaussian and a discrete variable in bits
+
+    I = mi_gd(x,y,Ym) returns the MI between the (possibly multidimensional)
+    Gaussian variable x and the discrete variable y.
+    Columns of x correspond to samples, rows to dimensions/variables. 
+    (Samples last axis)
+    y should contain integer values in the range [0 Ym-1] (inclusive).
+
+    biascorrect : true / false option (default true) which specifies whether
+    bias correction should be applied to the esimtated MI.
+    demeaned : false / true option (default false) which specifies whether the
+    input data already has zero mean (true if it has been copula-normalized)
+
+    """
+
+    x = np.atleast_2d(x)
+    y = np.squeeze(y)
+    if x.ndim > 2:
+        raise ValueError, "x must be at most 2d"
+    if y.ndim > 1:
+        raise ValueError, "only univariate discrete variables supported"
+    if not np.issubdtype(y.dtype, np.integer):
+        raise ValueError, "y should be an integer array"
+    if not isinstance(Ym, int):
+        raise ValueError, "Ym should be an integer"
+
+    Ntrl = x.shape[1]
+    Nvarx = x.shape[0]
+
+    if y.size != Ntrl:
+        raise ValueError, "number of trials do not match"
+
+    if not demeaned:
+        x = x - x.mean(axis=1)[:,np.newaxis]
+
+    # class-conditional entropies
+    Ntrl_y = np.zeros(Ym)
+    Hcond = np.zeros(Ym)
+    c = 0.5*(np.log(2.0*np.pi)+1)
+    for yi in range(Ym):
+        idx = y==yi
+        xm = x[:,idx]
+        Ntrl_y[yi] = xm.shape[1]
+        xm = xm - xm.mean(axis=1)[:,np.newaxis]
+        Cm = np.dot(xm,xm.T) / float(Ntrl_y[yi]-1)
+        chCm = np.linalg.cholesky(Cm)
+        Hcond[yi] = np.sum(np.log(np.diagonal(chCm))) # + c*Nvarx
+
+    # class weights
+    w = Ntrl_y / float(Ntrl)
+
+    # unconditional entropy from unconditional Gaussian fit
+    Cx = np.dot(x,x.T) / float(Ntrl-1)
+    chC = np.linalg.cholesky(Cx)
+    Hunc = np.sum(np.log(np.diagonal(chC))) # + c*Nvarx
+
+    ln2 = np.log(2)
+    if biascorrect:
+        vars = np.arange(1,Nvarx+1)
+
+        psiterms = sp.special.psi((Ntrl - vars).astype(np.float)/2.0) / 2.0
+        dterm = (ln2 - np.log(float(Ntrl-1))) / 2.0
+        Hunc = Hunc - Nvarx*dterm - psiterms.sum()
+
+        dterm = (ln2 - np.log((Ntrl_y-1).astype(np.float))) / 2.0
+        psiterms = np.zeros(Ym)
+        for vi in vars:
+            idx = Ntrl_y-vi
+            psiterms = psiterms + sp.special.psi(idx.astype(np.float)/2.0)
+        Hcond = Hcond - Nvarx*dterm - (psiterms/2.0)
+
+    # MI in bits
+    I = (Hunc - np.sum(w*Hcond)) / ln2
+    return I
+
+
+def gcmi_cd(x,y,Ym):
+    """Gaussian-Copula Mutual Information between a continuous and a discrete variable
+
+    I = gcmi_gd(x,y,Ym) returns the MI between the (possibly multidimensional)
+    continuous variable x and the discrete variable y.
+    Columns of x correspond to samples, rows to dimensions/variables.
+    (Samples last axis)
+    y should contain integer values in the range [0 Ym-1] (inclusive).
+
+    """
+
+    x = np.atleast_2d(x)
+    y = np.squeeze(y)
+    if x.ndim > 2:
+        raise ValueError, "x must be at most 2d"
+    if y.ndim > 1:
+        raise ValueError, "only univariate discrete variables supported"
+    if not np.issubdtype(y.dtype, np.integer):
+        raise ValueError, "y should be an integer array"
+    if not isinstance(Ym, int):
+        raise ValueError, "Ym should be an integer"
+
+    Ntrl = x.shape[1]
+    Nvarx = x.shape[0]
+
+    if y.size != Ntrl:
+        raise ValueError, "number of trials do not match"
+
+    # check for repeated values
+    for xi in range(Nvarx):
+        if (np.unique(x[xi,:]).size / float(Ntrl)) < 0.9:
+            warnings.warn("Input x has more than 10% repeated values")
+            break
+
+    # check values of discrete variable
+    if y.min()!=0 or y.max()!=(Ym-1):
+        raise ValueError, "values of discrete variable y are out of bounds"
+
+    # copula normalization
+    cx = copnorm(x)
+    # parametric Gaussian MI
+    I = mi_gd(cx,y,Ym,True,True)
     return I
 
 
