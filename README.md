@@ -10,7 +10,7 @@ Add the contents of the `matlab` directory to your Matlab path.
 
 #### Python
 
-...
+Put `gcmi.py` somewhere on your `PYTHONPATH` or in your working directory. `import gcmi` and then prefix the functions below with the module name, e.g. `gcmi.gcmi_cc(x,y)`.
 
 ## Usage
 
