@@ -2,6 +2,11 @@
 
 Functions for calculating mutual information and other information theoretic quantities using a parametric Gaussian copula. 
 
+The [`matlab_examples`](matlab_examples) directory contains tutorial example scripts reproducing the analyses from:
+
+RAA Ince, BL Giordano, C Kayser, GA Rousselet, J Gross and PG Schyns  
+"A statistical framework based on a novel mutual information estimator utilizing a Gaussian copula"
+
 ## Installation
 
 #### Matlab
