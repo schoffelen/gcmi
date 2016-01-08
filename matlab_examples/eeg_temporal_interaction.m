@@ -214,4 +214,58 @@ title('Redundancy (bits)')
 
 %% Calculating the emergence of novel MI over time
 
+% We downsample the data for this analysis:
+% downsample the raw signal
+dscsd = resample(csddat',1,4)';
+% downsample the gradient (calculated with full temporal resolution)
+dscsdgrad = resample(csdgrad',1,4)';
+dstime = resample(time,1,4);
+dsNt = length(dstime);
 
+ceeg = copnorm(dscsd);
+ceeggrad = copnorm(dscsdgrad);
+
+% calculate CMI as before for the downsampled data
+I2d = zeros(1,dsNt);
+for ti=1:dsNt
+    I2d(ti) = cmi_ggg( [ceeg(:,ti) ceeggrad(:,ti)], ceyestim(:,1), ...
+                        ceyestim(:,2), true, true);
+end
+
+% calculate new MI at each time point
+I2dnew = zeros(1,dsNt);
+for ti=2:dsNt
+    % add extra variables to condition out with Matlab concatenation
+    % as well as the right eye we also condition out the 2d response at 
+    % the previous time point
+    I2dnew(ti) = cmi_ggg( [ceeg(:,ti) ceeggrad(:,ti)], ceyestim(:,1), ...
+                          [ceeg(:,ti-1) ceeggrad(:,ti-1) ceyestim(:,2)], true, true);
+end
+
+% manual inspection of the I2dnew time course reveals two clear early peaks
+% to ensure later novel information is genuinely new we include these peaks
+% into the conditional
+peaks = [36 42]; % manually identified from I2dnew
+I2dnewpeak = zeros(1,dsNt);
+for ti=2:dsNt
+    % construct multi-dimensional variable to condition out
+    condvar = [ceeg(:,ti-1) ceeggrad(:,ti-1) ceyestim(:,2)];
+    for pi=1:length(peaks)
+        if ti>(peaks(pi)+1)
+            % if this peak is earlier than the current time point
+            % add it to the conditioning
+            condvar = [condvar ceeg(:,peaks(pi)) ceeggrad(:,peaks(pi))];
+        end
+    end
+    I2dnewpeak(ti) = cmi_ggg( [ceeg(:,ti) ceeggrad(:,ti)], ceyestim(:,1), ...
+                               condvar, true, true);
+end
+
+figure
+hold all
+plot(dstime,I2d)
+plot(dstime,I2dnew)
+plot(dstime,I2dnewpeak)
+xlabel('Time (ms)')
+ylabel('bits')
+legend('MI','New MI: previous timepoint', 'New MI: previous timepoint + peaks')
