@@ -28,8 +28,8 @@ This script covers the analyses in Section 4.2, with a full helmet continuous de
 This script covers the analyses in Section 4.3, with single sensor event-related EEG data in an event-related design with a continuous stimulus feature (sampled eye visibility). Topics covered include:
 
 - Calculating Conditional Mutual Information (CMI) with correlated stimulus features.
-- Calculating MI in the multivariate repsonse considering of raw voltage together with the single-trial instaneous temporal derivative.
 - Calculating cross-temporal interaction information.
+- Calculating MI in the multivariate repsonse consisting of raw voltage together with the single-trial instaneous temporal derivative.
 - Calculating the emergence of novel MI over time.
 
 

@@ -18,7 +18,7 @@
 %% Download and load data
 
 % this will attempt to download the eeg data from the internet (~86MB)
-% alternatively you can download the file eeg_face_vs_noise.mat manually
+% alternatively you can download the meg_speech.mat manually
 % and place it in the same directory as this script
 fname = 'meg_speech.mat';
 data_url = ['https://www.robince.net/data/gcmi/data/' fname];
