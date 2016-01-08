@@ -9,6 +9,9 @@
 % or right click -> Evaluate currect section
 
 % You need the gcmi/matlab directory on your matlab path.
+% If you are running from the gcmi project tree you can add this with the
+% following command:
+% addpath('../matlab')
 
 % Questions / comments : robince@gmail.com
 
