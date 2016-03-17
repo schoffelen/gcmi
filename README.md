@@ -2,10 +2,15 @@
 
 Functions for calculating mutual information and other information theoretic quantities using a parametric Gaussian copula. 
 
-The [`matlab_examples`](matlab_examples) directory contains tutorial example scripts reproducing the analyses from:
+If you use this code for analysis that is published in an indexed journal or repository, please cite the following article:
 
 RAA Ince, BL Giordano, C Kayser, GA Rousselet, J Gross and PG Schyns  
-"A statistical framework based on a novel mutual information estimator utilizing a Gaussian copula"
+"A statistical framework for neuroimaging data analysis based on mutual information estimated via a Gaussian copula"  
+[bioRxiv:](http://biorxiv.org/content/early/2016/03/16/043745) [doi:10.1101/043745](http://dx.doi.org/10.1101/043745)
+
+For journals with supplementary information that may not be indexed for citations, **please place the citation in the indexed main manuscript**.
+
+The [`matlab_examples`](matlab_examples) directory contains tutorial example scripts reproducing the analyses from that paper.
 
 ## Installation
 
@@ -91,4 +96,12 @@ These functions calculate information theoretic quantities (mi: mutual informati
 *  `H = ent_g(x, biascorrect)`
 
     Return analytic entropy of a (possibly multidimensional) Gaussian variable. 
+
+
+## Compiled parallel versions
+
+The code here implements the method in a direct, portable way with error checking.
+If you find the measures work for you and plan an analysis of a large data set you might find the performance of this implementation a bottleneck.
+I have a fast parallellised compiled mex implementation of the functions which can speed up typical neuroimaging mass-univariate analysis by two orders of magnitude, as well as access to excellent computing resources at the University of Glasgow.
+If this sounds like it would be useful I would be very happy to hear from anyone interested in a collaboration.
 
