@@ -1,7 +1,7 @@
 % This script provides a tutorial application of the Gaussian-Copula Mutual
-% Information (GCMI) estimator  with a continuous auditory stimulus feature 
-% (low pass filtered  speech envelope) in a continuous design
-
+% Information (GCMI) estimator to quantify temporal interactions in an
+% event-related EEG response modulated by a continuous stimulus feature
+% 
 % This script uses cell mode - cells are delimited by %% lines and can 
 % be run with: 
 % ctrl-enter (windows, linux) or cmd-enter (mac)
