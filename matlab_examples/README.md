@@ -4,7 +4,7 @@ This folder contains some tutorial examples for the use of the GCMI package, rep
 
 RAA Ince, BL Giordano, C Kayser, GA Rousselet, J Gross and PG Schyns  
 "A statistical framework for neuroimaging data analysis based on mutual information estimated via a Gaussian copula"  
-[bioRxiv:](http://biorxiv.org/content/early/2016/03/16/043745) [doi:10.1101/043745](http://dx.doi.org/10.1101/043745)
+bioRxiv [doi:10.1101/043745](http://dx.doi.org/10.1101/043745)
 
 Each of these scripts will download the required data file if it is not be available, so please take care if you are on a slow or metered internet connection. The data files can be downloaded manually from [https://www.robince.net/data/gcmi](https://www.robince.net/data/gcmi).
 

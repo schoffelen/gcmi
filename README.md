@@ -6,7 +6,7 @@ If you use this code for analysis that is published in an indexed journal or rep
 
 RAA Ince, BL Giordano, C Kayser, GA Rousselet, J Gross and PG Schyns  
 "A statistical framework for neuroimaging data analysis based on mutual information estimated via a Gaussian copula"  
-[bioRxiv:](http://biorxiv.org/content/early/2016/03/16/043745) [doi:10.1101/043745](http://dx.doi.org/10.1101/043745)
+bioRxiv [doi:10.1101/043745](http://dx.doi.org/10.1101/043745)
 
 For journals with supplementary information that may not be indexed for citations, **please place the citation in the indexed main manuscript**.
 
