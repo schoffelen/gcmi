@@ -49,9 +49,9 @@ For functions with a `biascorrect` option, this is an optional true or false swi
 
     Calculate GCMI between two (possibly multidimensional) continuous variables x and y. x and y can have any marginal distribution but should not contain repeated values. 
 
-*  `I = gcmi_cd(x,y,Ym)` 
+*  `I = gcmi_model_cd(x,y,Ym)` 
 
-    Calculate GCMI between a (possibly multidimensional) continuous variables x and a discrete y (with values between 0 and Ym-1 inclusive).
+    Calculate GCMI between a (possibly multidimensional) continuous variables x and a discrete y (with values between 0 and Ym-1 inclusive). This uses ANOVA style model comparison. It provides a lower bound to MI in the 1d case (but not in higher dimensions).
 
 *  `I = gccmi_ccc(x,y,z)` 
 
@@ -83,9 +83,9 @@ These functions calculate information theoretic quantities (mi: mutual informati
 
     Calculate MI between two (possibly multidimensional) Gaussian variables x and y. 
 
-*  `I = mi_gd(x,y,Ym,biascorrect)` 
+*  `I = mi_model_gd(x,y,Ym,biascorrect)` 
 
-    Calculate MI between a (possibly multidimensional) Gaussian variable x and a discrete y (with values between 0 and Ym-1 inclusive). 
+    Calculate MI between a (possibly multidimensional) Gaussian variable x and a discrete y (with values between 0 and Ym-1 inclusive). This uses ANOVA style model comparison. It provides a lower bound to MI in the 1d case (but not in higher dimensions). 
 
 *  `I = cmi_ggg(x,y,biascorrect)` 
 

@@ -1,8 +1,9 @@
-function I = mi_gd(x, y, Ym, biascorrect, demeaned)
-% MI_GD Mutual information (MI) between a Gaussian and a discrete
-%         variable in bits
-%   I = mi_gd(x,y,Ym) returns the MI between the (possibly multidimensional)
+function I = mi_model_gd(x, y, Ym, biascorrect, demeaned)
+% MI_MODEL_GD Mutual information (MI) between a Gaussian and a discrete
+%         variable in bits bits based on ANOVA style model comparison.
+%   I = mi_model_gd(x,y,Ym) returns the MI between the (possibly multidimensional)
 %   Gaussian variable x and the discrete variable y.
+%   For 1D x this is a lower bound to the mutual information.
 %   Rows of x correspond to samples, columns to dimensions/variables. 
 %   (Samples first axis)
 %   y should contain integer values in the range [0 Ym-1] (inclusive).
@@ -11,25 +12,26 @@ function I = mi_gd(x, y, Ym, biascorrect, demeaned)
 %   bias correction should be applied to the esimtated MI.
 %   demeaned : false / true option (default false) which specifies whether the
 %   input data already has zero mean (true if it has been copula-normalized)
+%   See also: MI_MIXTURE_GD
 
 % ensure samples first axis for vectors
 if isvector(x)
     x = x(:);
 end
 if ndims(x)~=2
-    error('mi_gd: input arrays should be 2d')
+    error('mi_model_gd: input arrays should be 2d')
 end
 if isvector(y)
     y = y(:);
 else
-    error('mi_gd: only univariate discrete variable supported');
+    error('mi_model_gd: only univariate discrete variable supported');
 end
 
 Ntrl = size(x,1);
 Nvar = size(x,2);
 
 if size(y,1) ~= Ntrl
-    error('mi_gd: number of trials do not match');
+    error('mi_model_gd: number of trials do not match');
 end
 
 % default option values

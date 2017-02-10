@@ -53,7 +53,7 @@ t = stats.tstat
 % for MI we use the stimulus labels for each trial
 % this works in the same way if there are more than 2 classes
 % Reminder: stim must take values 0 or 1
-I = gcmi_cd(csddat(:,chi,ti), stim, 2)
+I = gcmi_model_cd(csddat(:,chi,ti), stim, 2)
 
 
 %% Calculate GCMI across all sensors and time point
@@ -73,7 +73,7 @@ for ti=1:Nt
         % as the data has been copula-normalised we can use the 
         % Gaussian parametric estimator (whatever the distribution was
         % originally)
-        Ieeg(chi,ti) = mi_gd(ceeg(:,chi,ti), stim, 2, true, true);
+        Ieeg(chi,ti) = mi_model_gd(ceeg(:,chi,ti), stim, 2, true, true);
     end
 end
 
@@ -96,7 +96,7 @@ for pi=1:Nperm
     pstim = stim(idx);
     % repeat mass-univariate MI calculation
     for chi=1:Nch
-        Iperm(chi,pi) = mi_gd(ceeg(:,chi,ti), pstim, 2, true, true);
+        Iperm(chi,pi) = mi_model_gd(ceeg(:,chi,ti), pstim, 2, true, true);
     end
 end
 
