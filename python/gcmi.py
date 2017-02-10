@@ -165,11 +165,13 @@ def gcmi_cc(x,y):
     return I
 
 
-def mi_gd(x, y, Ym, biascorrect=True, demeaned=False):
+def mi_model_gd(x, y, Ym, biascorrect=True, demeaned=False):
     """Mutual information (MI) between a Gaussian and a discrete variable in bits
+    based on ANOVA style model comparison.
 
-    I = mi_gd(x,y,Ym) returns the MI between the (possibly multidimensional)
+    I = mi_model_gd(x,y,Ym) returns the MI between the (possibly multidimensional)
     Gaussian variable x and the discrete variable y.
+    For 1D x this is a lower bound to the mutual information.
     Columns of x correspond to samples, rows to dimensions/variables. 
     (Samples last axis)
     y should contain integer values in the range [0 Ym-1] (inclusive).
@@ -178,6 +180,8 @@ def mi_gd(x, y, Ym, biascorrect=True, demeaned=False):
     bias correction should be applied to the esimtated MI.
     demeaned : false / true option (default false) which specifies whether the
     input data already has zero mean (true if it has been copula-normalized)
+
+    See also: mi_mixture_gd
 
     """
 
@@ -242,14 +246,18 @@ def mi_gd(x, y, Ym, biascorrect=True, demeaned=False):
     return I
 
 
-def gcmi_cd(x,y,Ym):
+def gcmi_model_cd(x,y,Ym):
     """Gaussian-Copula Mutual Information between a continuous and a discrete variable
+     based on ANOVA style model comparison.
 
-    I = gcmi_gd(x,y,Ym) returns the MI between the (possibly multidimensional)
+    I = gcmi_model_gd(x,y,Ym) returns the MI between the (possibly multidimensional)
     continuous variable x and the discrete variable y.
+    For 1D x this is a lower bound to the mutual information.
     Columns of x correspond to samples, rows to dimensions/variables.
     (Samples last axis)
     y should contain integer values in the range [0 Ym-1] (inclusive).
+
+    See also: gcmi_mixture_cd
 
     """
 
@@ -283,7 +291,7 @@ def gcmi_cd(x,y,Ym):
     # copula normalization
     cx = copnorm(x)
     # parametric Gaussian MI
-    I = mi_gd(cx,y,Ym,True,True)
+    I = mi_model_gd(cx,y,Ym,True,True)
     return I
 
 
