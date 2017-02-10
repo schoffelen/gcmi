@@ -250,7 +250,7 @@ def gcmi_model_cd(x,y,Ym):
     """Gaussian-Copula Mutual Information between a continuous and a discrete variable
      based on ANOVA style model comparison.
 
-    I = gcmi_model_gd(x,y,Ym) returns the MI between the (possibly multidimensional)
+    I = gcmi_model_cd(x,y,Ym) returns the MI between the (possibly multidimensional)
     continuous variable x and the discrete variable y.
     For 1D x this is a lower bound to the mutual information.
     Columns of x correspond to samples, rows to dimensions/variables.
@@ -292,6 +292,156 @@ def gcmi_model_cd(x,y,Ym):
     cx = copnorm(x)
     # parametric Gaussian MI
     I = mi_model_gd(cx,y,Ym,True,True)
+    return I
+
+
+def mi_mixture_gd(x, y, Ym):
+    """Mutual information (MI) between a Gaussian and a discrete variable in bits
+    calculated from a Gaussian mixture.
+
+    I = mi_mixture_gd(x,y,Ym) returns the MI between the (possibly multidimensional)
+    Gaussian variable x and the discrete variable y.
+    Columns of x correspond to samples, rows to dimensions/variables.
+    (Samples last axis)
+    y should contain integer values in the range [0 Ym-1] (inclusive).
+
+    See also: mi_model_gd
+
+    """
+
+    x = np.atleast_2d(x)
+    y = np.squeeze(y)
+    if x.ndim > 2:
+        raise ValueError, "x must be at most 2d"
+    if y.ndim > 1:
+        raise ValueError, "only univariate discrete variables supported"
+    if not np.issubdtype(y.dtype, np.integer):
+        raise ValueError, "y should be an integer array"
+    if not isinstance(Ym, int):
+        raise ValueError, "Ym should be an integer"
+
+    Ntrl = x.shape[1]
+    Nvarx = x.shape[0]
+
+    if y.size != Ntrl:
+        raise ValueError, "number of trials do not match"
+
+    # class-conditional entropies
+    Ntrl_y = np.zeros(Ym)
+    Hcond = np.zeros(Ym)
+    m = np.zeros((Ym,Nvarx))
+    w = np.zeros(Ym)
+    cc = 0.5*(np.log(2.0*np.pi)+1)
+    C = np.zeros((Ym,Nvarx,Nvarx))
+    chC = np.zeros((Ym,Nvarx,Nvarx))
+    for yi in range(Ym):
+        # class conditional data
+        idx = y==yi
+        xm = x[:,idx]
+        # class mean
+        m[yi,:] = xm.mean(axis=1)
+        Ntrl_y[yi] = xm.shape[1]
+
+        xm = xm - m[yi,:][:,np.newaxis]
+        C[yi,:,:] = np.dot(xm,xm.T) / float(Ntrl_y[yi]-1)
+        chC[yi,:,:] = np.linalg.cholesky(C[yi,:,:])
+        Hcond[yi] = np.sum(np.log(np.diagonal(chC[yi,:,:]))) + cc*Nvarx
+
+    # class weights
+    w = Ntrl_y / float(Ntrl)
+
+    # mixture entropy via unscented transform
+    # See:
+    # Huber, Bailey, Durrant-Whyte and Hanebeck
+    # "On entropy approximation for Gaussian mixture random vectors"
+    # http://dx.doi.org/10.1109/MFI.2008.4648062
+
+    # Goldberger, Gordon, Greenspan
+    # "An efficient image similarity measure based on approximations of 
+    # KL-divergence between two Gaussian mixtures"
+    # http://dx.doi.org/10.1109/ICCV.2003.1238387
+    D = Nvarx
+    Ds = np.sqrt(Nvarx)
+    Hmix = 0.0
+    for yi in range(Ym):
+        Ps = Ds * chC[yi,:,:].T
+        thsm = m[yi,:,np.newaxis]
+        # unscented points for this class
+        usc = np.hstack([thsm + Ps, thsm - Ps])
+
+        # class log-likelihoods at unscented points
+        log_lik = np.zeros((Ym,2*Nvarx))
+        for mi in range(Ym):
+            # demean points
+            dx = usc -  m[mi,:,np.newaxis]
+            # gaussian likelihood
+            log_lik[mi,:] = _norm_innerv(dx, chC[mi,:,:]) - Hcond[mi] + 0.5*Nvarx
+
+        # log mixture likelihood for these unscented points
+        # sum over classes, axis=0
+        logmixlik = sp.misc.logsumexp(log_lik,axis=0,b=w[:,np.newaxis])
+
+        # add to entropy estimate (sum over unscented points for this class)
+        Hmix = Hmix + w[yi]*logmixlik.sum()
+
+    Hmix = -Hmix / (2*D)
+
+    # no bias correct
+    I = (Hmix - np.sum(w*Hcond)) / np.log(2.0)
+    return I
+
+def _norm_innerv(x, chC):
+    """ normalised innervations """
+    m = np.linalg.solve(chC,x)
+    w = -0.5 * (m * m).sum(axis=0)
+    return w
+
+def gcmi_mixture_cd(x,y,Ym):
+    """Gaussian-Copula Mutual Information between a continuous and a discrete variable
+    calculated from a Gaussian mixture.
+
+    I = gcmi_mixture_cd(x,y,Ym) returns the MI between the (possibly multidimensional)
+    continuous variable x and the discrete variable y.
+    For 1D x this is a lower bound to the mutual information.
+    Columns of x correspond to samples, rows to dimensions/variables.
+    (Samples last axis)
+    y should contain integer values in the range [0 Ym-1] (inclusive).
+
+    See also: gcmi_model_cd
+
+    """
+
+    x = np.atleast_2d(x)
+    y = np.squeeze(y)
+    if x.ndim > 2:
+        raise ValueError, "x must be at most 2d"
+    if y.ndim > 1:
+        raise ValueError, "only univariate discrete variables supported"
+    if not np.issubdtype(y.dtype, np.integer):
+        raise ValueError, "y should be an integer array"
+    if not isinstance(Ym, int):
+        raise ValueError, "Ym should be an integer"
+
+    Ntrl = x.shape[1]
+    Nvarx = x.shape[0]
+
+    if y.size != Ntrl:
+        raise ValueError, "number of trials do not match"
+
+    # check for repeated values
+    for xi in range(Nvarx):
+        if (np.unique(x[xi,:]).size / float(Ntrl)) < 0.9:
+            warnings.warn("Input x has more than 10% repeated values")
+            break
+
+    # check values of discrete variable
+    if y.min()!=0 or y.max()!=(Ym-1):
+        raise ValueError, "values of discrete variable y are out of bounds"
+
+    # copula normalization
+    cx = copnorm(x)
+    # parametric Gaussian mixture MI
+    I = mi_mixture_gd(cx,y,Ym)
     return I
 
 

@@ -51,7 +51,11 @@ For functions with a `biascorrect` option, this is an optional true or false swi
 
 *  `I = gcmi_model_cd(x,y,Ym)` 
 
-    Calculate GCMI between a (possibly multidimensional) continuous variables x and a discrete y (with values between 0 and Ym-1 inclusive). This uses ANOVA style model comparison. It provides a lower bound to MI in the 1d case (but not in higher dimensions).
+    Calculate GCMI between a (possibly multidimensional) continuous variable x and a discrete y (with values between 0 and Ym-1 inclusive). This uses ANOVA style model comparison. It provides a lower bound to MI in the 1d case (but not in higher dimensions).
+
+*  `I = gcmi_mixture_cd(x,y,Ym)` 
+
+    Calculate GCMI between a (possibly multidimensional) continuous variable x and a discrete y (with values between 0 and Ym-1 inclusive). This uses a Gaussian mixture model.  
 
 *  `I = gccmi_ccc(x,y,z)` 
 
@@ -86,6 +90,10 @@ These functions calculate information theoretic quantities (mi: mutual informati
 *  `I = mi_model_gd(x,y,Ym,biascorrect)` 
 
     Calculate MI between a (possibly multidimensional) Gaussian variable x and a discrete y (with values between 0 and Ym-1 inclusive). This uses ANOVA style model comparison. It provides a lower bound to MI in the 1d case (but not in higher dimensions). 
+
+  *  `I = mi_mixture_gd(x,y,Ym,biascorrect)` 
+
+    Calculate MI between a (possibly multidimensional) Gaussian variable x and a discrete y (with values between 0 and Ym-1 inclusive). This uses a Gaussian mixture model.
 
 *  `I = cmi_ggg(x,y,biascorrect)` 
 
