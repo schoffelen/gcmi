@@ -102,6 +102,5 @@ I = (Hmix - w*Hcond') / log(2);
 
 function w = norm_innerv(x, chC)
 % normalised innervations
-display(x)
 m = (chC')\x;
 w = -0.5 *sum(m.*m,1);
