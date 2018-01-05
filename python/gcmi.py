@@ -7,6 +7,8 @@ import scipy as sp
 import scipy.stats
 import warnings
 
+__version__ = '0.2'
+
 def ctransform(x):
     """Copula transformation (empirical CDF)
 

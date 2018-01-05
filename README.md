@@ -122,3 +122,8 @@ We cannot measure the "true" value of the mutual information for the system stud
 ![Figure: mi_model_gd null permutation histograms](matlab_examples/bias_demo.png)
 
 The figure above shows the results of `mi_model_gd` calculated with 100 trials each of two classes, when the data in each class are sampled from the same standard normal distribution. This is repeated 1000 times (see [`bias_demo.m`](matlab_examples/bias_demo.m)). Vertical red lines show the mean of the repetitions. You can see that many simulations result in negative values. 
+
+## Version history
+
+* 0.2 - Rename `mi_gd` functions to `mi_model_` and add `mi_mixture`
+* 0.1 - Original version
