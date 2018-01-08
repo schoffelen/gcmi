@@ -7,7 +7,7 @@ import scipy as sp
 import scipy.stats
 import warnings
 
-__version__ = '0.2'
+__version__ = '0.3'
 
 def ctransform(x):
     """Copula transformation (empirical CDF)
@@ -398,10 +398,13 @@ def _norm_innerv(x, chC):
     w = -0.5 * (m * m).sum(axis=0)
     return w
 
+
 def gcmi_mixture_cd(x,y,Ym):
     """Gaussian-Copula Mutual Information between a continuous and a discrete variable
     calculated from a Gaussian mixture.
 
+    The Gaussian mixture is fit using robust measures of location (median) and scale
+    (median absolute deviation) for each class.
     I = gcmi_mixture_cd(x,y,Ym) returns the MI between the (possibly multidimensional)
     continuous variable x and the discrete variable y.
     For 1D x this is a lower bound to the mutual information.
@@ -440,10 +443,29 @@ def gcmi_mixture_cd(x,y,Ym):
     if y.min()!=0 or y.max()!=(Ym-1):
         raise ValueError, "values of discrete variable y are out of bounds"
 
-    # copula normalization
-    cx = copnorm(x)
-    # parametric Gaussian mixture MI
-    I = mi_mixture_gd(cx,y,Ym)
+    # copula normalise each class
+    # shift and rescale to match loc and scale of raw data
+    # this provides a robust way to fit the gaussian mixture
+    classdat = []
+    ydat = []
+    for yi in range(Ym):
+        # class conditional data
+        idx = y==yi
+        xm = x[:,idx]
+        cxm = copnorm(xm)
+
+        xmmed = np.median(xm,axis=1)[:,np.newaxis]
+        # robust measure of s.d. under Gaussian assumption from median absolute deviation
+        xmmad = np.median(np.abs(xm - xmmed),axis=1)[:,np.newaxis]
+        cxmscaled = cxm * (1.482602218505602*xmmad)
+        # robust measure of loc from median
+        cxmscaled = cxmscaled + xmmed
+        classdat.append(cxmscaled)
+        ydat.append(yi*np.ones(xm.shape[1],dtype=np.int))
+
+    cx = np.concatenate(classdat,axis=1) 
+    newy = np.concatenate(ydat)
+    I = mi_mixture_gd(cx,newy,Ym)
     return I
 
 

@@ -55,7 +55,7 @@ For functions with a `biascorrect` option, this is an optional true or false swi
 
 *  `I = gcmi_mixture_cd(x,y,Ym)` 
 
-    Calculate GCMI between a (possibly multidimensional) continuous variable x and a discrete y (with values between 0 and Ym-1 inclusive). This uses a Gaussian mixture model.  
+    Calculate GCMI between a (possibly multidimensional) continuous variable x and a discrete y (with values between 0 and Ym-1 inclusive). This uses a Gaussian mixture model, fit with robust measures of location and scale.
 
 *  `I = gccmi_ccc(x,y,z)` 
 
@@ -119,11 +119,12 @@ If this sounds like it would be useful I would be very happy to hear from anyone
 
 We cannot measure the "true" value of the mutual information for the system studied, we can only estimate the quantity from the data we observe. Any estimate from data has a variance - if you repeat the experiment you will not get exactly the same value. For a positive quantity like MI this means that even when there is no dependence, you will get a different positive value for each data set. This means the estimator has a bias - the expected value when there is no effect (e.g. mean of permutations) is greater than zero. When we apply bias correction techniques to remove this bias and get the mean closer to zero, this means there will be more negative values observed when the variables are independent. Also, since the `mi_model_gd` method compares different models, which each feature different sampling variability, this estimator can have negative values even before bias correction.
 
-![Figure: mi_model_gd null permutation histograms](matlab_examples/bias_demo.png)
+![Figure: `mi_model_gd` null permutation histograms](matlab_examples/bias_demo.png)
 
 The figure above shows the results of `mi_model_gd` calculated with 100 trials each of two classes, when the data in each class are sampled from the same standard normal distribution. This is repeated 1000 times (see [`bias_demo.m`](matlab_examples/bias_demo.m)). Vertical red lines show the mean of the repetitions. You can see that many simulations result in negative values. 
 
 ## Version history
 
+* 0.3 - Change `mi_mixture` from an unconditional copnorm to a more faithful mixture model based on robust measures  of location and  scale
 * 0.2 - Rename `mi_gd` functions to `mi_model_` and add `mi_mixture`
 * 0.1 - Original version
