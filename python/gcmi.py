@@ -45,7 +45,7 @@ def ent_g(x, biascorrect=True):
     """
     x = np.atleast_2d(x)
     if x.ndim > 2:
-        raise ValueError, "x must be at most 2d"
+        raise ValueError("x must be at most 2d")
     Ntrl = x.shape[1]
     Nvarx = x.shape[0]
 
@@ -86,14 +86,14 @@ def mi_gg(x, y, biascorrect=True, demeaned=False):
     x = np.atleast_2d(x)
     y = np.atleast_2d(y)
     if x.ndim > 2 or y.ndim > 2:
-        raise ValueError, "x and y must be at most 2d"
+        raise ValueError("x and y must be at most 2d")
     Ntrl = x.shape[1]
     Nvarx = x.shape[0]
     Nvary = y.shape[0]
     Nvarxy = Nvarx+Nvary
 
     if y.shape[1] != Ntrl:
-        raise ValueError, "number of trials do not match"
+        raise ValueError("number of trials do not match")
 
     # joint variable
     xy = np.vstack((x,y))
@@ -141,13 +141,13 @@ def gcmi_cc(x,y):
     x = np.atleast_2d(x)
     y = np.atleast_2d(y)
     if x.ndim > 2 or y.ndim > 2:
-        raise ValueError, "x and y must be at most 2d"
+        raise ValueError("x and y must be at most 2d")
     Ntrl = x.shape[1]
     Nvarx = x.shape[0]
     Nvary = y.shape[0]
 
     if y.shape[1] != Ntrl:
-        raise ValueError, "number of trials do not match"
+        raise ValueError("number of trials do not match")
 
     # check for repeated values
     for xi in range(Nvarx):
@@ -190,19 +190,19 @@ def mi_model_gd(x, y, Ym, biascorrect=True, demeaned=False):
     x = np.atleast_2d(x)
     y = np.squeeze(y)
     if x.ndim > 2:
-        raise ValueError, "x must be at most 2d"
+        raise ValueError("x must be at most 2d")
     if y.ndim > 1:
-        raise ValueError, "only univariate discrete variables supported"
+        raise ValueError("only univariate discrete variables supported")
     if not np.issubdtype(y.dtype, np.integer):
-        raise ValueError, "y should be an integer array"
+        raise ValueError("y should be an integer array")
     if not isinstance(Ym, int):
-        raise ValueError, "Ym should be an integer"
+        raise ValueError("Ym should be an integer")
 
     Ntrl = x.shape[1]
     Nvarx = x.shape[0]
 
     if y.size != Ntrl:
-        raise ValueError, "number of trials do not match"
+        raise ValueError("number of trials do not match")
 
     if not demeaned:
         x = x - x.mean(axis=1)[:,np.newaxis]
@@ -266,19 +266,19 @@ def gcmi_model_cd(x,y,Ym):
     x = np.atleast_2d(x)
     y = np.squeeze(y)
     if x.ndim > 2:
-        raise ValueError, "x must be at most 2d"
+        raise ValueError("x must be at most 2d")
     if y.ndim > 1:
-        raise ValueError, "only univariate discrete variables supported"
+        raise ValueError("only univariate discrete variables supported")
     if not np.issubdtype(y.dtype, np.integer):
-        raise ValueError, "y should be an integer array"
+        raise ValueError("y should be an integer array")
     if not isinstance(Ym, int):
-        raise ValueError, "Ym should be an integer"
+        raise ValueError("Ym should be an integer")
 
     Ntrl = x.shape[1]
     Nvarx = x.shape[0]
 
     if y.size != Ntrl:
-        raise ValueError, "number of trials do not match"
+        raise ValueError("number of trials do not match")
 
     # check for repeated values
     for xi in range(Nvarx):
@@ -288,7 +288,7 @@ def gcmi_model_cd(x,y,Ym):
 
     # check values of discrete variable
     if y.min()!=0 or y.max()!=(Ym-1):
-        raise ValueError, "values of discrete variable y are out of bounds"
+        raise ValueError("values of discrete variable y are out of bounds")
 
     # copula normalization
     cx = copnorm(x)
@@ -314,19 +314,19 @@ def mi_mixture_gd(x, y, Ym):
     x = np.atleast_2d(x)
     y = np.squeeze(y)
     if x.ndim > 2:
-        raise ValueError, "x must be at most 2d"
+        raise ValueError("x must be at most 2d")
     if y.ndim > 1:
-        raise ValueError, "only univariate discrete variables supported"
+        raise ValueError("only univariate discrete variables supported")
     if not np.issubdtype(y.dtype, np.integer):
-        raise ValueError, "y should be an integer array"
+        raise ValueError("y should be an integer array")
     if not isinstance(Ym, int):
-        raise ValueError, "Ym should be an integer"
+        raise ValueError("Ym should be an integer")
 
     Ntrl = x.shape[1]
     Nvarx = x.shape[0]
 
     if y.size != Ntrl:
-        raise ValueError, "number of trials do not match"
+        raise ValueError("number of trials do not match")
 
     # class-conditional entropies
     Ntrl_y = np.zeros(Ym)
@@ -419,19 +419,19 @@ def gcmi_mixture_cd(x,y,Ym):
     x = np.atleast_2d(x)
     y = np.squeeze(y)
     if x.ndim > 2:
-        raise ValueError, "x must be at most 2d"
+        raise ValueError("x must be at most 2d")
     if y.ndim > 1:
-        raise ValueError, "only univariate discrete variables supported"
+        raise ValueError("only univariate discrete variables supported")
     if not np.issubdtype(y.dtype, np.integer):
-        raise ValueError, "y should be an integer array"
+        raise ValueError("y should be an integer array")
     if not isinstance(Ym, int):
-        raise ValueError, "Ym should be an integer"
+        raise ValueError("Ym should be an integer")
 
     Ntrl = x.shape[1]
     Nvarx = x.shape[0]
 
     if y.size != Ntrl:
-        raise ValueError, "number of trials do not match"
+        raise ValueError("number of trials do not match")
 
     # check for repeated values
     for xi in range(Nvarx):
@@ -441,7 +441,7 @@ def gcmi_mixture_cd(x,y,Ym):
 
     # check values of discrete variable
     if y.min()!=0 or y.max()!=(Ym-1):
-        raise ValueError, "values of discrete variable y are out of bounds"
+        raise ValueError("values of discrete variable y are out of bounds")
 
     # copula normalise each class
     # shift and rescale to match loc and scale of raw data
@@ -489,7 +489,7 @@ def cmi_ggg(x, y, z, biascorrect=True, demeaned=False):
     y = np.atleast_2d(y)
     z = np.atleast_2d(z)
     if x.ndim > 2 or y.ndim > 2 or z.ndim > 2:
-        raise ValueError, "x, y and z must be at most 2d"
+        raise ValueError("x, y and z must be at most 2d")
     Ntrl = x.shape[1]
     Nvarx = x.shape[0]
     Nvary = y.shape[0]
@@ -500,7 +500,7 @@ def cmi_ggg(x, y, z, biascorrect=True, demeaned=False):
     Nvarxyz = Nvarx + Nvaryz
 
     if y.shape[1] != Ntrl or z.shape[1] != Ntrl:
-        raise ValueError, "number of trials do not match"
+        raise ValueError("number of trials do not match")
 
     # joint variable
     xyz = np.vstack((x,y,z))
@@ -557,7 +557,7 @@ def gccmi_ccc(x,y,z):
     y = np.atleast_2d(y)
     z = np.atleast_2d(z)
     if x.ndim > 2 or y.ndim > 2 or z.ndim > 2:
-        raise ValueError, "x, y and z must be at most 2d"
+        raise ValueError("x, y and z must be at most 2d")
 
     Ntrl = x.shape[1]
     Nvarx = x.shape[0]
@@ -565,7 +565,7 @@ def gccmi_ccc(x,y,z):
     Nvarz = z.shape[0]
 
     if y.shape[1] != Ntrl or z.shape[1] != Ntrl:
-        raise ValueError, "number of trials do not match"
+        raise ValueError("number of trials do not match")
 
     # check for repeated values
     for xi in range(Nvarx):
@@ -605,20 +605,20 @@ def gccmi_ccd(x,y,z,Zm):
     x = np.atleast_2d(x)
     y = np.atleast_2d(y)
     if x.ndim > 2 or y.ndim > 2:
-        raise ValueError, "x and y must be at most 2d"
+        raise ValueError("x and y must be at most 2d")
     if z.ndim > 1:
-        raise ValueError, "only univariate discrete variables supported"
+        raise ValueError("only univariate discrete variables supported")
     if not np.issubdtype(z.dtype, np.integer):
-        raise ValueError, "z should be an integer array"
+        raise ValueError("z should be an integer array")
     if not isinstance(Zm, int):
-        raise ValueError, "Zm should be an integer"
+        raise ValueError("Zm should be an integer")
 
     Ntrl = x.shape[1]
     Nvarx = x.shape[0]
     Nvary = y.shape[0]
 
     if y.shape[1] != Ntrl or z.size != Ntrl:
-        raise ValueError, "number of trials do not match"
+        raise ValueError("number of trials do not match")
 
     # check for repeated values
     for xi in range(Nvarx):
@@ -632,7 +632,7 @@ def gccmi_ccd(x,y,z,Zm):
 
     # check values of discrete variable
     if z.min()!=0 or z.max()!=(Zm-1):
-        raise ValueError, "values of discrete variable z are out of bounds"
+        raise ValueError("values of discrete variable z are out of bounds")
 
     # calculate gcmi for each z value
     Icond = np.zeros(Zm)
@@ -654,4 +654,3 @@ def gccmi_ccd(x,y,z,Zm):
     CMI = np.sum(Pz*Icond)
     I = mi_gg(np.hstack(cx),np.hstack(cy),True,False)
     return (CMI,I)
-
