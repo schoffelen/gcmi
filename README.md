@@ -6,7 +6,7 @@ If you use this code for analysis that is published in an indexed journal or rep
 
 RAA Ince, BL Giordano, C Kayser, GA Rousselet, J Gross and PG Schyns  
 "A statistical framework for neuroimaging data analysis based on mutual information estimated via a Gaussian copula"  
-bioRxiv [doi:10.1101/043745](http://dx.doi.org/10.1101/043745)
+*Human Brain Mapping* (2017) 38 p. 1541-1573 [doi:10.1002/hbm.23471](http://dx.doi.org/10.1002/hbm.23471)
 
 For journals with supplementary information that may not be indexed for citations, **please place the citation in the indexed main manuscript**.
 
