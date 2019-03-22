@@ -30,7 +30,8 @@ def copnorm(x):
     CDF value as the input. Operates along the last axis.
 
     """
-    cx = sp.stats.norm.ppf(ctransform(x))
+    #cx = sp.stats.norm.ppf(ctransform(x))
+    cx = sp.special.ndtri(ctransform(x))
     return cx
 
 
@@ -643,7 +644,7 @@ def gccmi_ccd(x,y,z,Zm):
         idx = z==zi
         thsx = copnorm(x[:,idx])
         thsy = copnorm(y[:,idx])
-        Pz[zi] = x.shape[1]
+        Pz[zi] = idx.sum()
         cx.append(thsx)
         cy.append(thsy)
         Icond[zi] = mi_gg(thsx,thsy,True,True)
