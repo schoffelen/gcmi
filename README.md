@@ -117,7 +117,7 @@ If this sounds like it would be useful I would be very happy to hear from anyone
 
 ### I get low or zero estimated MI values when there is a non-linear relationship in my data
 
-GCMI is an approximate lower bound estimate to the true non-linear mutual information. GCMI quantifies dependence that can be modelled with a Gaussian copula, therefore can be thought of as having similar sensitivity to a rank correlation (in the univariate case). If you have e.g. a donut shape distribution (#1) or other non-linear effects (#4) the GCMI lower bound might not be tight and it could even give a value close to 0. If you need sensitivity to all forms of non-linear you should use a different estimator. The advantages of GCMI are its robustness, computational efficiency and performance for multivariate calculations, but it is a lower bound approximation. 
+GCMI is an approximate lower bound estimate to the true non-linear mutual information. GCMI quantifies dependence that can be modelled with a Gaussian copula, therefore can be thought of as having similar sensitivity to a rank correlation (in the univariate case). If you have a distribution with non-linear effects (e.g. a donut shape) the GCMI lower bound might not be tight and it could even give a value close to 0. If you need sensitivity to all forms of non-linear you should use a different estimator. The advantages of GCMI are its robustness, computational efficiency and performance for multivariate calculations, but it is a lower bound approximation. 
 
 ### I tried GCMI on my data but I get negative values. I thought MI was always positive?
 
