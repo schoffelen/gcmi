@@ -115,6 +115,10 @@ If this sounds like it would be useful I would be very happy to hear from anyone
 
 ## FAQ
 
+### I get low or zero estimated MI values when there is a non-linear relationship in my data
+
+GCMI is an approximate lower bound estimate to the true non-linear mutual information. GCMI quantifies dependence that can be modelled with a Gaussian copula, therefore can be thought of as having similar sensitivity to a rank correlation (in the univariate case). If you have e.g. a donut shape distribution (#1) or other non-linear effects (#4) the GCMI lower bound might not be tight and it could even give a value close to 0. If you need sensitivity to all forms of non-linear you should use a different estimator. The advantages of GCMI are its robustness, computational efficiency and performance for multivariate calculations, but it is a lower bound approximation. 
+
 ### I tried GCMI on my data but I get negative values. I thought MI was always positive?
 
 We cannot measure the "true" value of the mutual information for the system studied, we can only estimate the quantity from the data we observe. Any estimate from data has a variance - if you repeat the experiment you will not get exactly the same value. For a positive quantity like MI this means that even when there is no dependence, you will get a different positive value for each data set. This means the estimator has a bias - the expected value when there is no effect (e.g. mean of permutations) is greater than zero. When we apply bias correction techniques to remove this bias and get the mean closer to zero, this means there will be more negative values observed when the variables are independent. Also, since the `mi_model_gd` method compares different models, which each feature different sampling variability, this estimator can have negative values even before bias correction.
