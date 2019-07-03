@@ -8,7 +8,7 @@ c   = zeros(siz);
 
 siz = size(x);
 
-if numel(siz)==2,
+if numel(siz)==2
     if siz(2)==1
         % 1d response
         c = sqrt(x);
@@ -66,6 +66,9 @@ elseif all(siz(2:3)==4),
 else
   %write for loop
   for k = 1:siz(1)
-    c(k,:,:) = chol(shiftdim(x(k,:,:)));
+    [tmp,dum] = chol(shiftdim(x(k,:,:)));
+    if ~dum
+      c(k,:,:) = tmp;
+    end
   end
 end
